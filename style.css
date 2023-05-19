@@ -1,0 +1,27 @@
+/* .row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+}
+
+.col-lg-4:nth-child(2) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#cardImage {
+  height: 50rem;
+  object-fit: contain;
+}
+
+#rulesText {
+  height: 50vh;
+  padding: 5vh;
+  font-size: large;
+}
+
+.banner {
+  padding: 2vh;
+} */
