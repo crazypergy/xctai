@@ -26,9 +26,10 @@ window.onload = function () {
       const cardImage = document.querySelector(".cardImage");
       cardImage.src = imageUrl;
     })
-    .catch((error) => {
-      console.log("There was an error: ", error);
-    });
+  .catch((error) => {
+    console.log("Error:", error);
+    output.textContent = "Failed to load card data. Try again!";
+});
 
   /* User Search */
   const form = document.querySelector("form");
@@ -103,7 +104,7 @@ window.onload = function () {
     query({ "inputs": rulesText }).then((response) => {
       var summaryText = response.summary_text;
       var rulesText = document.getElementById("rulesText");
-      rulesText.textContent = (JSON.stringify(response));
+      rulesText.textContent = response[0].summary_text || "No summary available.";
     }).catch((error) => {
       console.log("An error occurred:", error);
     });
