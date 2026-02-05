@@ -6,7 +6,7 @@ window.onload = function () {
   const image = document.querySelector(".cardImage");
   const explainBtn = document.getElementById("explainBtn");
 
-  const SUMMARY_API_URL = "https://YOUR_CLOUDFLARE_WORKER_DOMAIN/summarize";
+  const SUMMARY_API_URL = "https://xctai.ctdobrien.workers.dev/summarize";
 
   function getImageUrl(cardData) {
     if (cardData?.image_uris?.normal) {

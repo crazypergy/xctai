@@ -1,5 +1,18 @@
 export default {
   async fetch(request, env) {
+    const url = new URL(request.url);
+
+    if (request.method === "OPTIONS") {
+      return new Response(null, {
+        status: 204,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type",
+        },
+      });
+    }
+
     if (request.method === "GET") {
       return new Response(
         JSON.stringify({ status: "ok", message: "Use POST /summarize" }),
@@ -15,6 +28,10 @@ export default {
 
     if (request.method !== "POST") {
       return new Response("Method Not Allowed", { status: 405 });
+    }
+
+    if (url.pathname !== "/summarize") {
+      return new Response("Not Found", { status: 404 });
     }
 
     let payload;
