@@ -1,4 +1,4 @@
-name = "xctai-summarize"
+name = "xctai"
 main = "cloudflare/worker.js"
 compatibility_date = "2026-02-05"
 
