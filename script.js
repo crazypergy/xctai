@@ -12,7 +12,10 @@ window.onload = function () {
     if (cardData?.image_uris?.normal) {
       return cardData.image_uris.normal;
     }
-    if (cardData?.card_faces?.length && cardData.card_faces[0]?.image_uris?.normal) {
+    if (
+      cardData?.card_faces?.length &&
+      cardData.card_faces[0]?.image_uris?.normal
+    ) {
       return cardData.card_faces[0].image_uris.normal;
     }
     return "";
