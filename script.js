@@ -8,6 +8,9 @@ window.onload = function () {
   const randomBtn = document.getElementById("randomBtn");
   const statusText = document.getElementById("statusText");
   const cardName = document.getElementById("cardName");
+  const summaryModal = document.getElementById("summaryModal");
+  const summaryText = document.getElementById("summaryText");
+  const closeModalBtn = document.getElementById("closeModalBtn");
 
   const SUMMARY_API_URL = "https://xctai.ctdobrien.workers.dev/summarize";
 
@@ -32,6 +35,23 @@ window.onload = function () {
     if (randomBtn) {
       randomBtn.disabled = isLoading;
     }
+  }
+
+  function openSummaryModal(text) {
+    if (!summaryModal || !summaryText) {
+      return;
+    }
+    summaryText.textContent = text;
+    summaryModal.classList.add("is-open");
+    summaryModal.setAttribute("aria-hidden", "false");
+  }
+
+  function closeSummaryModal() {
+    if (!summaryModal) {
+      return;
+    }
+    summaryModal.classList.remove("is-open");
+    summaryModal.setAttribute("aria-hidden", "true");
   }
 
   async function loadRulings(cardData) {
@@ -119,12 +139,30 @@ window.onload = function () {
 
       const result = await response.json();
       const summary = result?.summary_text || result?.[0]?.summary_text;
-      output.textContent = summary || "No summary available.";
+      openSummaryModal(summary || "No summary available.");
       setLoading(false, "");
     } catch (error) {
       console.log("An error occurred:", error);
       output.textContent = "Failed to summarize. Try again!";
       setLoading(false, "Summarization failed.");
+    }
+  });
+
+  if (summaryModal) {
+    summaryModal.addEventListener("click", (event) => {
+      if (event.target === summaryModal) {
+        closeSummaryModal();
+      }
+    });
+  }
+
+  if (closeModalBtn) {
+    closeModalBtn.addEventListener("click", closeSummaryModal);
+  }
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeSummaryModal();
     }
   });
 
