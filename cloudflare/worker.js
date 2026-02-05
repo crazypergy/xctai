@@ -67,23 +67,36 @@ export default {
     const apiUrl =
       "https://api-inference.huggingface.co/models/facebook/bart-large-cnn";
 
-    const hfResponse = await fetch(apiUrl, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${env.HF_API_TOKEN}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
+    try {
+      const hfResponse = await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${env.HF_API_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
 
-    const text = await hfResponse.text();
+      const data = await hfResponse.json();
 
-    return new Response(text, {
-      status: hfResponse.status,
-      headers: {
-        "Content-Type": "application/json",
-        ...corsHeaders,
-      },
-    });
+      return new Response(JSON.stringify(data), {
+        status: hfResponse.status,
+        headers: {
+          "Content-Type": "application/json",
+          ...corsHeaders,
+        },
+      });
+    } catch (error) {
+      return new Response(
+        JSON.stringify({ error: "Failed to communicate with HuggingFace API" }),
+        {
+          status: 500,
+          headers: {
+            "Content-Type": "application/json",
+            ...corsHeaders,
+          },
+        },
+      );
+    }
   },
 };
