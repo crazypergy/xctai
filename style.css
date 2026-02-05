@@ -1,4 +1,4 @@
-/* .row {
+.row {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -11,7 +11,7 @@
   align-items: center;
 }
 
-#cardImage {
+.cardImage {
   height: 50rem;
   object-fit: contain;
 }
@@ -24,4 +24,4 @@
 
 .banner {
   padding: 2vh;
-} */
+}
