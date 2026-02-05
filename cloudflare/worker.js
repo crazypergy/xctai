@@ -1,10 +1,14 @@
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    // CORS headers configuration
+    // Note: Using wildcard (*) for Access-Control-Allow-Origin as this is a public API
+    // For production, consider restricting to specific domains if needed
     const corsHeaders = {
       "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type",
+      "Access-Control-Max-Age": "86400", // 24 hours preflight cache
     };
 
     if (request.method === "OPTIONS") {
@@ -30,12 +34,21 @@ export default {
     if (request.method !== "POST") {
       return new Response("Method Not Allowed", {
         status: 405,
-        headers: corsHeaders,
+        headers: {
+          "Content-Type": "text/plain",
+          ...corsHeaders,
+        },
       });
     }
 
     if (url.pathname !== "/summarize") {
-      return new Response("Not Found", { status: 404, headers: corsHeaders });
+      return new Response("Not Found", {
+        status: 404,
+        headers: {
+          "Content-Type": "text/plain",
+          ...corsHeaders,
+        },
+      });
     }
 
     let payload;
@@ -44,7 +57,10 @@ export default {
     } catch {
       return new Response("Invalid JSON", {
         status: 400,
-        headers: corsHeaders,
+        headers: {
+          "Content-Type": "text/plain",
+          ...corsHeaders,
+        },
       });
     }
 
