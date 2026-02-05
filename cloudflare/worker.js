@@ -88,7 +88,9 @@ export default {
       });
     } catch (error) {
       return new Response(
-        JSON.stringify({ error: "Failed to communicate with HuggingFace API" }),
+        JSON.stringify({ 
+          error: error.message || "Failed to communicate with HuggingFace API" 
+        }),
         {
           status: 500,
           headers: {
