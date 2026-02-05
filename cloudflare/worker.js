@@ -79,6 +79,8 @@ export default {
 
       const data = await hfResponse.json();
 
+      // Return the response with the original status from HuggingFace
+      // This includes both successful responses and API errors
       return new Response(JSON.stringify(data), {
         status: hfResponse.status,
         headers: {
@@ -89,7 +91,7 @@ export default {
     } catch (error) {
       return new Response(
         JSON.stringify({ 
-          error: error.message || "Failed to communicate with HuggingFace API" 
+          error: error.message || "Failed to process HuggingFace API response" 
         }),
         {
           status: 500,
