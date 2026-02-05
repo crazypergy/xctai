@@ -74,8 +74,8 @@ window.onload = function () {
       summaryOutput.textContent = summary || "No summary available.";
       setLoading(false, "");
     } catch (error) {
-      console.log("An error occurred during summarization:", error);
-      summaryOutput.textContent = "Failed to summarize rules. The rulings are displayed in the Rulings section.";
+      console.error("An error occurred during summarization:", error);
+      summaryOutput.textContent = "Failed to generate summary. Please try again.";
       setLoading(false, "");
     }
   }
