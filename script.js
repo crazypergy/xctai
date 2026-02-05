@@ -5,6 +5,9 @@ window.onload = function () {
   const output = document.getElementById("rulesText");
   const image = document.querySelector(".cardImage");
   const explainBtn = document.getElementById("explainBtn");
+  const randomBtn = document.getElementById("randomBtn");
+  const statusText = document.getElementById("statusText");
+  const cardName = document.getElementById("cardName");
 
   const SUMMARY_API_URL = "https://xctai.ctdobrien.workers.dev/summarize";
 
@@ -21,6 +24,16 @@ window.onload = function () {
     return "";
   }
 
+  function setLoading(isLoading, message) {
+    if (statusText) {
+      statusText.textContent = message || "";
+    }
+    explainBtn.disabled = isLoading;
+    if (randomBtn) {
+      randomBtn.disabled = isLoading;
+    }
+  }
+
   async function loadRulings(cardData) {
     if (!cardData?.rulings_uri) {
       output.textContent = "No rulings found for this card.";
@@ -35,30 +48,40 @@ window.onload = function () {
   }
 
   /* Random Card */
-  (async function loadRandomCard() {
+  async function loadRandomCard() {
+    setLoading(true, "Loading random card...");
     try {
       const response = await fetch("https://api.scryfall.com/cards/random");
       const cardData = await response.json();
+      cardName.textContent = cardData?.name || "Unknown Card";
       image.src = getImageUrl(cardData);
       await loadRulings(cardData);
+      setLoading(false, "");
     } catch (error) {
       console.log("Error:", error);
       output.textContent = "Failed to load card data. Try again!";
+      setLoading(false, "Unable to load card.");
     }
-  })();
+  }
+
+  loadRandomCard();
 
   /* User Search */
-  async function sendToModel(cardName) {
-    const endpoint = `https://api.scryfall.com/cards/named?exact=${encodeURIComponent(cardName)}`;
+  async function sendToModel(cardQuery) {
+    const endpoint = `https://api.scryfall.com/cards/named?exact=${encodeURIComponent(cardQuery)}`;
 
     try {
+      setLoading(true, "Searching for card...");
       const response = await fetch(endpoint);
       const cardData = await response.json();
+      cardName.textContent = cardData?.name || "Unknown Card";
       image.src = getImageUrl(cardData);
       await loadRulings(cardData);
+      setLoading(false, "");
     } catch (error) {
       console.log("There was an error: ", error);
       output.textContent = "Failed to load card data. Try again!";
+      setLoading(false, "Unable to load card.");
     }
   }
 
@@ -81,6 +104,7 @@ window.onload = function () {
     }
 
     try {
+      setLoading(true, "Summarizing...");
       const response = await fetch(SUMMARY_API_URL, {
         method: "POST",
         headers: {
@@ -96,9 +120,17 @@ window.onload = function () {
       const result = await response.json();
       const summary = result?.summary_text || result?.[0]?.summary_text;
       output.textContent = summary || "No summary available.";
+      setLoading(false, "");
     } catch (error) {
       console.log("An error occurred:", error);
       output.textContent = "Failed to summarize. Try again!";
+      setLoading(false, "Summarization failed.");
     }
   });
+
+  if (randomBtn) {
+    randomBtn.addEventListener("click", () => {
+      loadRandomCard();
+    });
+  }
 };
