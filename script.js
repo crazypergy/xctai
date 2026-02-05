@@ -35,7 +35,7 @@ window.onload = function () {
       output.textContent = summary || "No summary available.";
       setLoading(false, "");
     } catch (error) {
-      console.log("An error occurred:", error);
+      console.error("An error occurred:", error);
       output.textContent = "Failed to summarize. Try again!";
       setLoading(false, "Summarization failed.");
     }
@@ -76,6 +76,7 @@ window.onload = function () {
     
     if (!rulingsText) {
       output.textContent = "There are no rules for this card.";
+      setLoading(false, "");
       return;
     }
     
