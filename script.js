@@ -3,8 +3,8 @@ window.onload = function () {
   const form = document.querySelector("form");
   const input = document.querySelector(".form-control");
   const output = document.getElementById("rulesText");
+  const summaryOutput = document.getElementById("summaryText");
   const image = document.querySelector(".cardImage");
-  const explainBtn = document.getElementById("explainBtn");
   const randomBtn = document.getElementById("randomBtn");
   const statusText = document.getElementById("statusText");
   const cardName = document.getElementById("cardName");
@@ -28,7 +28,6 @@ window.onload = function () {
     if (statusText) {
       statusText.textContent = message || "";
     }
-    explainBtn.disabled = isLoading;
     if (randomBtn) {
       randomBtn.disabled = isLoading;
     }
@@ -37,6 +36,7 @@ window.onload = function () {
   async function loadRulings(cardData) {
     if (!cardData?.rulings_uri) {
       output.textContent = "No rulings found for this card.";
+      summaryOutput.textContent = "No rules to summarize.";
       return;
     }
 
@@ -45,6 +45,39 @@ window.onload = function () {
     const rulings = (rulingsData?.data || []).map((ruling) => ruling.comment);
     const rulingsText = rulings.join(" ");
     output.textContent = rulingsText || "There are no rules for this card.";
+    
+    // Automatically summarize the rules
+    if (rulingsText) {
+      await summarizeRules(rulingsText);
+    } else {
+      summaryOutput.textContent = "No rules to summarize.";
+    }
+  }
+
+  async function summarizeRules(rulesText) {
+    try {
+      setLoading(true, "Summarizing rules...");
+      const response = await fetch(SUMMARY_API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ inputs: rulesText }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch summary");
+      }
+
+      const result = await response.json();
+      const summary = result?.summary_text || result?.[0]?.summary_text;
+      summaryOutput.textContent = summary || "No summary available.";
+      setLoading(false, "");
+    } catch (error) {
+      console.log("An error occurred during summarization:", error);
+      summaryOutput.textContent = "Failed to summarize rules. The rulings are displayed in the Rulings section.";
+      setLoading(false, "");
+    }
   }
 
   /* Random Card */
@@ -93,39 +126,6 @@ window.onload = function () {
       return;
     }
     sendToModel(userInput);
-  });
-
-  /* Explain the Card (Cloudflare Worker) */
-  explainBtn.addEventListener("click", async function () {
-    const rulesText = output.textContent.trim();
-    if (!rulesText) {
-      output.textContent = "No rules to summarize.";
-      return;
-    }
-
-    try {
-      setLoading(true, "Summarizing...");
-      const response = await fetch(SUMMARY_API_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ inputs: rulesText }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch summary");
-      }
-
-      const result = await response.json();
-      const summary = result?.summary_text || result?.[0]?.summary_text;
-      output.textContent = summary || "No summary available.";
-      setLoading(false, "");
-    } catch (error) {
-      console.log("An error occurred:", error);
-      output.textContent = "Failed to summarize. Try again!";
-      setLoading(false, "Summarization failed.");
-    }
   });
 
   if (randomBtn) {
