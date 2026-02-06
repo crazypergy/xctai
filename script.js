@@ -4,12 +4,42 @@ window.onload = function () {
   const input = document.querySelector(".form-control");
   const output = document.getElementById("rulesText");
   const image = document.querySelector(".cardImage");
-  const explainBtn = document.getElementById("explainBtn");
   const randomBtn = document.getElementById("randomBtn");
   const statusText = document.getElementById("statusText");
   const cardName = document.getElementById("cardName");
 
   const SUMMARY_API_URL = "https://xctai.ctdobrien.workers.dev/summarize";
+
+  async function summarizeRulings(rulesText) {
+    if (!rulesText) {
+      output.textContent = "No rules to summarize.";
+      return;
+    }
+
+    try {
+      setLoading(true, "Summarizing...");
+      const response = await fetch(SUMMARY_API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ inputs: rulesText }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch summary");
+      }
+
+      const result = await response.json();
+      const summary = result?.summary_text || result?.[0]?.summary_text;
+      output.textContent = summary || "No summary available.";
+      setLoading(false, "");
+    } catch (error) {
+      console.error("An error occurred:", error);
+      output.textContent = "Failed to summarize. Try again!";
+      setLoading(false, "Summarization failed.");
+    }
+  }
 
   function getImageUrl(cardData) {
     if (cardData?.image_uris?.normal) {
@@ -28,7 +58,6 @@ window.onload = function () {
     if (statusText) {
       statusText.textContent = message || "";
     }
-    explainBtn.disabled = isLoading;
     if (randomBtn) {
       randomBtn.disabled = isLoading;
     }
@@ -44,7 +73,15 @@ window.onload = function () {
     const rulingsData = await rulingsResponse.json();
     const rulings = (rulingsData?.data || []).map((ruling) => ruling.comment);
     const rulingsText = rulings.join(" ");
-    output.textContent = rulingsText || "There are no rules for this card.";
+    
+    if (!rulingsText) {
+      output.textContent = "There are no rules for this card.";
+      setLoading(false, "");
+      return;
+    }
+    
+    // Automatically summarize the rulings
+    await summarizeRulings(rulingsText);
   }
 
   /* Random Card */
@@ -93,39 +130,6 @@ window.onload = function () {
       return;
     }
     sendToModel(userInput);
-  });
-
-  /* Explain the Card (Cloudflare Worker) */
-  explainBtn.addEventListener("click", async function () {
-    const rulesText = output.textContent.trim();
-    if (!rulesText) {
-      output.textContent = "No rules to summarize.";
-      return;
-    }
-
-    try {
-      setLoading(true, "Summarizing...");
-      const response = await fetch(SUMMARY_API_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ inputs: rulesText }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch summary");
-      }
-
-      const result = await response.json();
-      const summary = result?.summary_text || result?.[0]?.summary_text;
-      output.textContent = summary || "No summary available.";
-      setLoading(false, "");
-    } catch (error) {
-      console.log("An error occurred:", error);
-      output.textContent = "Failed to summarize. Try again!";
-      setLoading(false, "Summarization failed.");
-    }
   });
 
   if (randomBtn) {
