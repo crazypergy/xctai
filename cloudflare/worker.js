@@ -92,7 +92,7 @@ export default {
         JSON.stringify({
           error: error.message || error.toString() || "Unknown error",
           stack: error.stack,
-          envToken: typeof env.HF_API_TOKEN !== 'undefined',
+          envToken: typeof env.HF_API_TOKEN !== "undefined",
         }),
         {
           status: 500,
