@@ -64,7 +64,7 @@ export default {
     }
 
     const apiUrl =
-      "https://api-inference.huggingface.co/models/facebook/bart-large-cnn";
+      "https://router.huggingface.co/models/facebook/bart-large-cnn";
 
     try {
       const hfResponse = await fetch(apiUrl, {
@@ -89,8 +89,8 @@ export default {
       });
     } catch (error) {
       return new Response(
-        JSON.stringify({ 
-          error: error.message || "Failed to process HuggingFace API response" 
+        JSON.stringify({
+          error: error.message || "Failed to process HuggingFace API response",
         }),
         {
           status: 500,
