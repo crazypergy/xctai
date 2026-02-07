@@ -90,7 +90,9 @@ export default {
     } catch (error) {
       return new Response(
         JSON.stringify({
-          error: error.message || "Failed to process HuggingFace API response",
+          error: error.message || error.toString() || "Unknown error",
+          stack: error.stack,
+          envToken: typeof env.HF_API_TOKEN !== 'undefined',
         }),
         {
           status: 500,
