@@ -2,15 +2,14 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     // CORS headers configuration
-    // Note: Using wildcard (*) for Access-Control-Allow-Origin as this is a public API
-    // For production, consider restricting to specific domains if needed
     const corsHeaders = {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type",
-      "Access-Control-Max-Age": "86400", // 24 hours preflight cache
+      "Access-Control-Max-Age": "86400",
     };
 
+    // Handle OPTIONS requests globally
     if (request.method === "OPTIONS") {
       return new Response(null, {
         status: 204,
