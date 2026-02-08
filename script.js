@@ -34,7 +34,8 @@ window.onload = function () {
       }
 
       const result = await response.json();
-      const summary = result?.summary_text || result?.[0]?.summary_text;
+      // Gemini API returns summary in result.candidates[0].content.parts[0].text
+      const summary = result?.candidates?.[0]?.content?.parts?.[0]?.text;
       output.textContent = summary || "No summary available.";
       setLoading(false, "");
     } catch (error) {
