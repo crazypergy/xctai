@@ -13,14 +13,16 @@ window.onload = function () {
 
   const SUMMARY_API_URL = "https://xctai.ctdobrien.workers.dev/summarize";
 
-  async function summarizeRulings(data) {
+  async function summarizeRulings(rulingsText) {
+    const instructions = "Explain and summarize these Magic the Gathering rules in a clear, concise way at a high-school reading level.";
+    const prompt = `${instructions}\n\nRules:\n${rulingsText}`;
     try {
       const response = await fetch(SUMMARY_API_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ inputs: data }),
+        body: JSON.stringify({ inputs: prompt }),
       });
 
       if (!response.ok) {
