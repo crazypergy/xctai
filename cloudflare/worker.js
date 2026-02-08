@@ -63,17 +63,21 @@ export default {
       });
     }
 
-    const apiUrl =
-      "https://router.huggingface.co/models/facebook/bart-large-cnn";
+    const apiUrl = "https://router.huggingface.co/v1/summarization";
 
     try {
+      // Ensure payload includes model name for router API
+      const routerPayload = {
+        model: "facebook/bart-large-cnn",
+        ...payload,
+      };
       const hfResponse = await fetch(apiUrl, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${env.HF_API_TOKEN}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(routerPayload),
       });
 
       const data = await hfResponse.json();
