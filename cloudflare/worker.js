@@ -66,7 +66,7 @@ export default {
     // Google Gemini API endpoint for text summarization
     const geminiApiUrl =
       "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent";
-    const geminiApiKey = "AIzaSyBv9lj6WR4hkumm21sHPxjRhZFiZgSfkJk";
+    const geminiApiKey = env.Genimi_API_Key;
 
     try {
       // Gemini expects a prompt structure
