@@ -13,35 +13,33 @@ window.onload = function () {
 
   const SUMMARY_API_URL = "https://xctai.ctdobrien.workers.dev/summarize";
 
-  async function summarizeRulings(rulesText) {
-    if (!rulesText) {
-      output.textContent = "No rules to summarize.";
-      return;
-    }
-
+  async function summarizeRulings(data) {
     try {
-      setLoading(true, "Summarizing...");
       const response = await fetch(SUMMARY_API_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ inputs: rulesText }),
+        body: JSON.stringify({ inputs: data }),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to fetch summary");
+        const errorData = await response
+          .json()
+          .catch(() => ({ message: "No detailed error message from server." }));
+        throw new Error(
+          `HTTP error! status: ${response.status}, message: ${errorData.message || response.statusText}`,
+        );
       }
 
       const result = await response.json();
       // Gemini API returns summary in result.candidates[0].content.parts[0].text
-      const summary = result?.candidates?.[0]?.content?.parts?.[0]?.text;
-      output.textContent = summary || "No summary available.";
-      setLoading(false, "");
+      return (
+        result?.candidates?.[0]?.content?.parts?.[0]?.text ||
+        "No summary available."
+      );
     } catch (error) {
-      console.error("An error occurred:", error);
-      output.textContent = "Failed to summarize. Try again!";
-      setLoading(false, "Summarization failed.");
+      throw new Error(`Failed to fetch summary: ${error.message}`);
     }
   }
 
@@ -101,8 +99,16 @@ window.onload = function () {
       return;
     }
 
-    // Automatically summarize the rulings
-    await summarizeRulings(rulingsText);
+    try {
+      setLoading(true, "Summarizing...");
+      const summary = await summarizeRulings(rulingsText);
+      output.textContent = summary;
+      setLoading(false, "");
+    } catch (error) {
+      console.error("An error occurred:", error);
+      output.textContent = "Failed to summarize. Try again!";
+      setLoading(false, "Summarization failed.");
+    }
   }
 
   /* Random Card */
