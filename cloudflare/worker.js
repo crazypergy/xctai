@@ -63,29 +63,36 @@ export default {
       });
     }
 
-    const apiUrl = "https://router.huggingface.co/v1/summarization";
+    // Google Gemini API endpoint for text summarization
+    const geminiApiUrl =
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent";
+    const geminiApiKey = "AIzaSyBv9lj6WR4hkumm21sHPxjRhZFiZgSfkJk";
 
     try {
-      // Ensure payload includes model name for router API
-      const routerPayload = {
-        model: "google/pegasus-xsum",
-        ...payload,
+      // Gemini expects a prompt structure
+      const geminiPayload = {
+        contents: [
+          {
+            parts: [{ text: payload.inputs }],
+          },
+        ],
       };
-      const hfResponse = await fetch(apiUrl, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${env.HF_API_TOKEN}`,
-          "Content-Type": "application/json",
+      const geminiResponse = await fetch(
+        `${geminiApiUrl}?key=${geminiApiKey}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(geminiPayload),
         },
-        body: JSON.stringify(routerPayload),
-      });
+      );
 
-      const data = await hfResponse.json();
+      const data = await geminiResponse.json();
 
-      // Return the response with the original status from HuggingFace
-      // This includes both successful responses and API errors
+      // Return the response with the original status from Gemini
       return new Response(JSON.stringify(data), {
-        status: hfResponse.status,
+        status: geminiResponse.status,
         headers: {
           "Content-Type": "application/json",
           ...corsHeaders,
@@ -96,7 +103,6 @@ export default {
         JSON.stringify({
           error: error.message || error.toString() || "Unknown error",
           stack: error.stack,
-          envToken: typeof env.HF_API_TOKEN !== "undefined",
         }),
         {
           status: 500,
