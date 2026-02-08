@@ -68,7 +68,7 @@ export default {
     try {
       // Ensure payload includes model name for router API
       const routerPayload = {
-        model: "facebook/bart-large-cnn",
+        model: "google/pegasus-xsum",
         ...payload,
       };
       const hfResponse = await fetch(apiUrl, {
