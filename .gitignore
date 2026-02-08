@@ -1,2 +1,3 @@
 .env
 test_hf_sdk.js
+test_hf_token.js
