@@ -65,15 +65,23 @@ export default {
 
     // Google Gemini API endpoint for text summarization
     const geminiApiUrl =
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent";
+      "https://generativelanguage.googleapis.com/v1/models/gemini-3-flash-preview:generateContent";
     const geminiApiKey = env.Genimi_API_Key;
 
     try {
       // Gemini expects a prompt structure
+      // Ensure payload.inputs is a string
       const geminiPayload = {
         contents: [
           {
-            parts: [{ text: payload.inputs }],
+            parts: [
+              {
+                text:
+                  typeof payload.inputs === "string"
+                    ? payload.inputs
+                    : JSON.stringify(payload.inputs),
+              },
+            ],
           },
         ],
       };
