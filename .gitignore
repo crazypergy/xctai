@@ -4,3 +4,4 @@ AIzaSyBv9lj6WR4hkumm21sHPxjRhZFiZgSfkJk
 .env
 test_hf_sdk.js
 test_hf_token.js
+test_gemini.js
