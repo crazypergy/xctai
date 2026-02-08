@@ -88,16 +88,43 @@ export default {
         },
       );
 
-      const data = await geminiResponse.json();
+      let data;
+      let isJson = true;
+      try {
+        data = await geminiResponse.json();
+      } catch (jsonErr) {
+        isJson = false;
+        data = await geminiResponse.text();
+      }
+
+      if (!geminiResponse.ok) {
+        return new Response(
+          JSON.stringify({
+            error: `Gemini API error: ${geminiResponse.status} ${geminiResponse.statusText}`,
+            details: data,
+            isJson,
+          }),
+          {
+            status: geminiResponse.status,
+            headers: {
+              "Content-Type": "application/json",
+              ...corsHeaders,
+            },
+          },
+        );
+      }
 
       // Return the response with the original status from Gemini
-      return new Response(JSON.stringify(data), {
-        status: geminiResponse.status,
-        headers: {
-          "Content-Type": "application/json",
-          ...corsHeaders,
+      return new Response(
+        isJson ? JSON.stringify(data) : JSON.stringify({ data }),
+        {
+          status: geminiResponse.status,
+          headers: {
+            "Content-Type": "application/json",
+            ...corsHeaders,
+          },
         },
-      });
+      );
     } catch (error) {
       return new Response(
         JSON.stringify({
