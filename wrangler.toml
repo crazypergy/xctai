@@ -5,3 +5,8 @@ compatibility_date = "2026-02-05"
 [vars]
 # Set HF_API_TOKEN as a secret instead of here:
 # wrangler secret put HF_API_TOKEN
+
+[observability]
+[observability.logs]
+enabled = false
+invocation_logs = true
