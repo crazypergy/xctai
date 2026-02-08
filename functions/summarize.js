@@ -53,19 +53,15 @@ export async function onRequest(context) {
     });
   }
 
-  // Google Gemini API endpoint for text summarization
-  const geminiApiUrl =
-    "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent";
-  const geminiApiKey = env.Genimi_API_Key;
+  // Google Gemini API endpoint for text summarization (updated)
+  const geminiApiUrl = "https://generativelanguage.googleapis.com/v1/models/gemini-3-flash-preview:generateContent";
+  const geminiApiKey = env.GEMINI_API_KEY;
 
   try {
-    // Gemini expects a prompt structure
+    // Gemini expects a prompt structure (updated for new model)
     const geminiPayload = {
-      contents: [
-        {
-          parts: [{ text: payload.inputs }],
-        },
-      ],
+      model: "gemini-3-flash-preview",
+      contents: payload.inputs,
     };
     const geminiResponse = await fetch(`${geminiApiUrl}?key=${geminiApiKey}`, {
       method: "POST",
