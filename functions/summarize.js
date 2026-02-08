@@ -54,7 +54,8 @@ export async function onRequest(context) {
   }
 
   // Google Gemini API endpoint for text summarization (updated)
-  const geminiApiUrl = "https://generativelanguage.googleapis.com/v1/models/gemini-3-flash-preview:generateContent";
+  const geminiApiUrl =
+    "https://generativelanguage.googleapis.com/v1/models/gemini-3-flash-preview:generateContent";
   const geminiApiKey = env.GEMINI_API_KEY;
 
   try {
