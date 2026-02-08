@@ -1,7 +1,50 @@
 window.onload = function () {
   /* Elements */
   const form = document.querySelector("form");
-  const input = document.querySelector(".form-control");
+  const input = document.getElementById("search-input");
+  const suggestions = document.getElementById("suggestions");
+  // Autocomplete for card names
+  async function fetchSuggestions(query) {
+    if (!query || query.length < 2) {
+      suggestions.innerHTML = "";
+      suggestions.style.display = "none";
+      return;
+    }
+    try {
+      const resp = await fetch(
+        `https://api.scryfall.com/cards/autocomplete?q=${encodeURIComponent(query)}`,
+      );
+      const data = await resp.json();
+      const names = data?.data || [];
+      suggestions.innerHTML = names
+        .map((name) => `<li tabindex="0">${name}</li>`)
+        .join("");
+      suggestions.style.display = names.length ? "block" : "none";
+    } catch {
+      suggestions.innerHTML = "";
+      suggestions.style.display = "none";
+    }
+  }
+
+  input.addEventListener("input", (e) => {
+    fetchSuggestions(e.target.value);
+  });
+
+  suggestions.addEventListener("mousedown", (e) => {
+    if (e.target.tagName === "LI") {
+      input.value = e.target.textContent;
+      suggestions.innerHTML = "";
+      suggestions.style.display = "none";
+      input.focus();
+    }
+  });
+
+  input.addEventListener("blur", () => {
+    setTimeout(() => {
+      suggestions.innerHTML = "";
+      suggestions.style.display = "none";
+    }, 150);
+  });
   const output = document.getElementById("rulesText");
   const image = document.querySelector(".cardImage");
   const randomBtn = document.getElementById("randomBtn");
