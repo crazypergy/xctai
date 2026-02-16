@@ -58,7 +58,7 @@ window.onload = function () {
 
   async function summarizeRulings(rulingsText) {
     const instructions =
-      "Provide an explanation that is concise and precise. Use clear, simple language. Eliminate unnecessary details and be direct. Keep the response easy to understand for someone unfamiliar with the topic.";
+      "Provide an explanation that is concise and precise. Use clear, simple language. Eliminate unnecessary details and be direct. Keep the response easy to understand for someone unfamiliar with the topic. Do not use markdown. Use a less conversational tone.";
     const prompt = `${instructions}\n\nRules:\n${rulingsText}`;
     try {
       const response = await fetch(SUMMARY_API_URL, {
