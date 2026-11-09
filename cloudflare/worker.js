@@ -66,7 +66,7 @@ export default {
     // Google Gemini API endpoint for text summarization
     const geminiApiUrl =
       "https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent";
-    const geminiApiKey = env.Genimi_API_Key;
+    const geminiApiKey = env.GEMINI_API_KEY; // Ensure this is set in your Cloudflare environment variables
 
     try {
       // Gemini expects a prompt structure
