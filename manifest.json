@@ -1,7 +1,7 @@
 {
   "name": "XTCAI Magic Card Summarizer",
   "short_name": "XTCAI",
-  "start_url": "/index.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#f4f6fb",
   "theme_color": "#3f51b5",

@@ -1,10 +1,10 @@
 const CACHE_NAME = "xctai-v1";
 const urlsToCache = [
-  "/",
-  "/index.html",
-  "/style.css",
-  "/script.js",
-  "/manifest.json",
+  "./",
+  "index.html",
+  "style.css",
+  "script.js",
+  "manifest.json",
   // Add icons and other assets
 ];
 
