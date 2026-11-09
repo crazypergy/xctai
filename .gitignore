@@ -1,4 +1,15 @@
+# Secrets and local config
 .env
+.dev.vars
+
+# Dependencies and build output
+node_modules/
+.wrangler/
+
+# Local test scripts
 test_hf_sdk.js
 test_hf_token.js
 test_gemini.js
+
+# OS files
+.DS_Store
