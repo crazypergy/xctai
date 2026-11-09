@@ -1,6 +1,3 @@
-# Google Gemini API key patterns
-REMOVED
-*gemini*key*
 .env
 test_hf_sdk.js
 test_hf_token.js
