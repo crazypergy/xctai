@@ -1,4 +1,4 @@
-const CACHE_NAME = "xctai-v1";
+const CACHE_NAME = "xctai-v2";
 const urlsToCache = [
   "./",
   "index.html",

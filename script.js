@@ -74,7 +74,7 @@ window.onload = function () {
           .json()
           .catch(() => ({ message: "No detailed error message from server." }));
         throw new Error(
-          `HTTP error! status: ${response.status}, message: ${errorData.message || response.statusText}`,
+          `HTTP error! status: ${response.status}, message: ${errorData.error || errorData.message || response.statusText}`,
         );
       }
 
