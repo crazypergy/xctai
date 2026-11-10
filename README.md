@@ -4,10 +4,6 @@ A progressive web app that looks up any _Magic: The Gathering_ card and turns it
 
 **Live demo:** https://crazypergy.github.io/xctai/
 
-<!-- Add a screenshot here once you have one:
-![XTCAI screenshot](docs/screenshot.png)
--->
-
 ## Why I built it
 
 Magic card rulings are accurate but dense. Many cards have a dozen rulings written in rules-lawyer language. XTCAI pulls those rulings from Scryfall and condenses them into a few direct sentences, so a newer player can understand how a card actually behaves.
